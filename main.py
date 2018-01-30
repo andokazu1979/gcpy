@@ -25,7 +25,6 @@ gsize = int(sys.argv[1])
 sendbuf = None
 if rank == 0:
     grid = np.ones([gsize,gsize], dtype='i')
-    print("initial:\n{0}\n".format(grid))
     sendbuf = grid
 
 recvbuf = np.zeros([gsize/nproc,gsize], dtype='i')
@@ -33,6 +32,9 @@ recvbuf = np.zeros([gsize/nproc,gsize], dtype='i')
 comm.Scatter(sendbuf, recvbuf, root=0)
 
 subgrid = recvbuf
+
+if rank == 0:
+    print("initial:\n{0}\n".format(grid))
 
 ########################################
 # Grid calculation
@@ -52,5 +54,3 @@ comm.Gather(sendbuf, recvbuf, root=0)
 
 if rank == 0:
     print("result:\n{1}\n".format(rank, recvbuf))
-
-
