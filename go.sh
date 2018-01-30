@@ -1,12 +1,12 @@
 #! /bin/sh
 #
 # useage:
-#  ./go.sh ${np} ${msize}
+#  ./go.sh ${np} ${gsize}
 #
 #  np:    number of processes
-#  msize: matrix size
+#  gsize: matrix size
 
 np=$1
-msize=$2
+gsize=$2
 
-mpirun -n ${np} python ./main.py ${msize}
+mpirun -n ${np} python ./main.py ${gsize}
