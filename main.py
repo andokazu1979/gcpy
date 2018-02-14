@@ -4,6 +4,8 @@ from mpi4py import MPI
 import numpy as np
 import sys
 
+import gcalc as gc
+
 ########################################
 # Initialization for MPI
 ########################################
@@ -27,7 +29,7 @@ if rank == 0:
     grid = np.ones([gsize,gsize], dtype='i')
     sendbuf = grid
 
-recvbuf = np.zeros([gsize/nproc,gsize], dtype='i')
+recvbuf = np.zeros([int(gsize/nproc),gsize], dtype='i')
 
 comm.Scatter(sendbuf, recvbuf, root=0)
 
@@ -40,7 +42,8 @@ if rank == 0:
 # Grid calculation
 ########################################
 
-subgrid = subgrid * rank
+# subgrid = subgrid * rank
+gc.scaling(rank, subgrid, subgrid.size)
 
 ########################################
 # Gather grid
