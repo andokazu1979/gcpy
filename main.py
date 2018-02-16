@@ -26,10 +26,10 @@ gsize = int(sys.argv[1])
 
 sendbuf = None
 if rank == 0:
-    grid = np.ones([gsize,gsize], dtype='i')
+    grid = np.ones([gsize,gsize], dtype='f4')
     sendbuf = grid
 
-recvbuf = np.zeros([int(gsize/nproc),gsize], dtype='i')
+recvbuf = np.zeros([int(gsize/nproc),gsize], dtype='f4')
 
 comm.Scatter(sendbuf, recvbuf, root=0)
 
@@ -53,7 +53,7 @@ gc.scaling_p(rank, subgrid, subgrid.size)
 sendbuf = subgrid
 
 if rank == 0:
-    recvbuf = np.zeros([gsize,gsize], dtype='i')
+    recvbuf = np.zeros([gsize,gsize], dtype='f4')
 comm.Gather(sendbuf, recvbuf, root=0)
 
 if rank == 0:
