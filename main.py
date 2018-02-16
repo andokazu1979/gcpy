@@ -42,8 +42,9 @@ if rank == 0:
 # Grid calculation
 ########################################
 
-# subgrid = subgrid * rank
-gc.scaling(rank, subgrid, subgrid.size)
+gc.scaling_p(rank, subgrid, subgrid.size)
+# gc.scaling_c(rank, subgrid, subgrid.size)
+# gc.scaling_f(rank, subgrid, subgrid.size)
 
 ########################################
 # Gather grid

@@ -1,15 +1,23 @@
+CC = gcc
+FC = gfortran
+LIBNAME_C = libgcalcc.so
+LIBNAME_F = libgcalcf.so
+OPT = -O3
+FLAGS = ${OPT} -shared -fPIC ${INCLUDE}
+CFLAGS = ${FLAGS}
+FFLAGS = ${FLAGS}
+LDFLAGS = 
+
 .PHONY: default
 default: build
 
-PYTHON = python
-
-CC = gcc
-LIBNAME = libgcalc.so
 .PHONY: build
-build: ${LIBNAME}
-${LIBNAME}: gcalc.c
-	${CC} -O3 -shared -fPIC -o $@ $<
+build: ${LIBNAME_C} ${LIBNAME_F}
+${LIBNAME_C}: gcalc.c
+	${CC} ${CFLAGS} ${LDFLAGS} -o $@ $<
+${LIBNAME_F}: gcalc.f90
+	${FC} ${FFLAGS} ${LDFLAGS} -o $@ $<
 
 .PHONY: clean
 clean:
-	${RM} -r ${LIBNAME} *.pyc __pycache__
+	${RM} -rf ${LIBNAME_C} ${LIBNAME_F} *.pyc __pycache__ *.lst
