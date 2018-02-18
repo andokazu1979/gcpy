@@ -4,7 +4,8 @@ from mpi4py import MPI
 import numpy as np
 import sys
 
-import gcalc as gc
+import gcalc
+import gcomm
 
 ########################################
 # Initialization for MPI
@@ -31,7 +32,8 @@ if rank == 0:
 
 recvbuf = np.zeros([int(gsize/nproc),gsize], dtype='f4')
 
-comm.Scatter(sendbuf, recvbuf, root=0)
+gcomm.scatter_p(comm, sendbuf, recvbuf, root=0)
+# gcomm.scatter_c(comm, sendbuf, recvbuf, root=0)
 
 subgrid = recvbuf
 
@@ -42,9 +44,9 @@ if rank == 0:
 # Grid calculation
 ########################################
 
-gc.scaling_p(rank, subgrid, subgrid.size)
-# gc.scaling_c(rank, subgrid, subgrid.size)
-# gc.scaling_f(rank, subgrid, subgrid.size)
+gcalc.scaling_p(rank, subgrid, subgrid.size)
+# gcalc.scaling_c(rank, subgrid, subgrid.size)
+# gcalc.scaling_f(rank, subgrid, subgrid.size)
 
 ########################################
 # Gather grid
