@@ -25,20 +25,32 @@ gsize = int(sys.argv[1])
 # Scatter grid
 ########################################
 
-sendbuf = None
-if rank == 0:
-    grid = np.ones([gsize,gsize], dtype='f4')
-    sendbuf = grid
+# sendbuf = None
+# if rank == 0:
+    # grid = np.ones([gsize,gsize], dtype='f4')
+    # sendbuf = grid
 
-recvbuf = np.zeros([int(gsize/nproc),gsize], dtype='f4')
+# recvbuf = np.zeros([int(gsize/nproc),gsize], dtype='f4')
 
-gcomm.scatter_p(comm, sendbuf, recvbuf, root=0)
-# gcomm.scatter_c(comm, sendbuf, recvbuf, root=0)
+# gcomm.scatter_p(comm, sendbuf, recvbuf, root=0)
+# # gcomm.scatter_c(comm, sendbuf, recvbuf, root=0)
 
-subgrid = recvbuf
+# subgrid = recvbuf
 
-if rank == 0:
-    print("initial:\n{0}\n".format(grid))
+# if rank == 0:
+    # print("initial:\n{0}\n".format(grid))
+
+subgrid = np.zeros([int(gsize/nproc),gsize], dtype='f4')
+
+amode = MPI.MODE_RDONLY
+fh = MPI.File.Open(comm, "./input.grd", amode)
+
+offset = rank*subgrid.nbytes
+fh.Read_at_all(offset, subgrid)
+
+fh.Close()
+
+print("rank {0} input:\n{1}\n".format(rank, subgrid))
 
 ########################################
 # Grid calculation
@@ -52,11 +64,21 @@ gcalc.scaling_p(rank, subgrid, subgrid.size)
 # Gather grid
 ########################################
 
-sendbuf = subgrid
+# sendbuf = subgrid
 
-if rank == 0:
-    recvbuf = np.zeros([gsize,gsize], dtype='f4')
-comm.Gather(sendbuf, recvbuf, root=0)
+# if rank == 0:
+    # recvbuf = np.zeros([gsize,gsize], dtype='f4')
+# comm.Gather(sendbuf, recvbuf, root=0)
 
-if rank == 0:
-    print("result:\n{1}\n".format(rank, recvbuf))
+# if rank == 0:
+    # print("result:\n{1}\n".format(rank, recvbuf))
+
+print("rank {0} result:\n{1}\n".format(rank, subgrid))
+
+amode = MPI.MODE_WRONLY|MPI.MODE_CREATE
+fh = MPI.File.Open(comm, "./output.grd", amode)
+
+offset = rank*subgrid.nbytes
+fh.Write_at_all(offset, subgrid)
+
+fh.Close()
