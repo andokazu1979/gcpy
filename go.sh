@@ -1,17 +1,21 @@
 #! /bin/sh
 #
 # useage:
-#  ./go.sh ${np} ${gsize}
+#  ./go.sh ${nx} ${ny} ${nz} ${px} ${py} ${pz}
 #
-#  np:    number of processes
-#  gsize: matrix size
+#  nx: Grid size of x
+#  ny: Grid size of y
+#  nz: Grid size of z
+#  px: Number of process for x-axis
+#  py: Number of process for y-axis
+#  pz: Number of process for z-axis
 
-np=$1
-nx=$2
-ny=$3
-nz=$4
-px=$5
-py=$6
-pz=$7
+nx=$1
+ny=$2
+nz=$3
+px=$4
+py=$5
+pz=$6
+np=$(expr $px \* $py \* $pz)
 
 mpirun -n ${np} python ./main.py ${nx} ${ny} ${nz} ${px} ${py} ${pz}
