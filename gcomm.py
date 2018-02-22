@@ -1,5 +1,5 @@
 import os
-from ctypes import CDLL, POINTER, c_int, c_float, byref, sizeof
+from ctypes import CDLL, POINTER, c_int, c_float, byref, sizeof, c_void_p
 import numpy as np
 from numpy.ctypeslib import ndpointer
 from mpi4py import MPI
