@@ -45,8 +45,17 @@ subgrid = np.zeros([int(gsize/nproc),gsize], dtype='f4')
 amode = MPI.MODE_RDONLY
 fh = MPI.File.Open(comm, "./input.grd", amode)
 
-offset = rank*subgrid.nbytes
-fh.Read_at_all(offset, subgrid)
+# count_ = 10
+# blocklength_ = 5
+# stride_ = 10
+blocklength_ = gsize / nproc
+count_ = gsize ** 2 / blocklength_
+stride_ = gsize
+filetype = MPI.FLOAT.Create_vector(count_, blocklength_, stride_)
+filetype.Commit()
+offset = MPI.FLOAT.Get_size() * blocklength_ * rank
+fh.Set_view(offset, filetype=filetype)
+fh.Read_at_all(0, subgrid)
 
 fh.Close()
 
@@ -78,7 +87,8 @@ print("rank {0} result:\n{1}\n".format(rank, subgrid))
 amode = MPI.MODE_WRONLY|MPI.MODE_CREATE
 fh = MPI.File.Open(comm, "./output.grd", amode)
 
-offset = rank*subgrid.nbytes
-fh.Write_at_all(offset, subgrid)
+# offset = rank*subgrid.nbytes
+fh.Set_view(offset, filetype=filetype)
+fh.Write_at_all(0, subgrid)
 
 fh.Close()
