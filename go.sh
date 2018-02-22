@@ -16,6 +16,8 @@ nz=$3
 px=$4
 py=$5
 pz=$6
+input=$7
+output=$8
 np=$(expr $px \* $py \* $pz)
 
-mpirun -n ${np} python ./main.py ${nx} ${ny} ${nz} ${px} ${py} ${pz}
+mpirun -n ${np} python ./main.py ${nx} ${ny} ${nz} ${px} ${py} ${pz} ${input} ${output}

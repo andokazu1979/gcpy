@@ -52,7 +52,7 @@ rank = comm_.Get_rank()
 
 
 amode = MPI.MODE_RDONLY
-fh = MPI.File.Open(comm_, "./input.grd", amode)
+fh = MPI.File.Open(comm_, sys.argv[7], amode)
 
 sizes = (nz, ny, nx)
 subsizes = (int(nz/pz), int(ny/py), int(nx/px))
@@ -92,7 +92,7 @@ gcalc.scaling_p(rank, subgrid)
 print("rank {0} result:\n{1}\n".format(rank, subgrid))
 
 amode = MPI.MODE_WRONLY|MPI.MODE_CREATE
-fh = MPI.File.Open(comm_, "./output.grd", amode)
+fh = MPI.File.Open(comm_, sys.argv[8], amode)
 
 fh.Set_view(filetype=filetype)
 fh.Write_at_all(0, subgrid)
