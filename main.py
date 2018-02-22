@@ -19,7 +19,17 @@ rank = comm.Get_rank()
 # Initialize grid
 ########################################
 
-gsize = int(sys.argv[1])
+nx = int(sys.argv[1])
+ny = int(sys.argv[2])
+nz = int(sys.argv[3])
+
+px = int(sys.argv[4])
+py = int(sys.argv[5])
+pz = int(sys.argv[6])
+
+comm_ = comm.Create_cart((pz, py, px), reorder=True)
+nproc = comm_.Get_size()
+rank = comm_.Get_rank()
 
 ########################################
 # Scatter grid
@@ -40,15 +50,16 @@ gsize = int(sys.argv[1])
 # if rank == 0:
     # print("initial:\n{0}\n".format(grid))
 
-subgrid = np.zeros([int(gsize/nproc),gsize], dtype='f4')
 
 amode = MPI.MODE_RDONLY
-fh = MPI.File.Open(comm, "./input.grd", amode)
+fh = MPI.File.Open(comm_, "./input.grd", amode)
 
-sizes = (gsize, gsize)
-subsizes = (int(gsize/nproc), gsize)
-starts = (int(gsize/nproc) * rank, 0)
-filetype = MPI.FLOAT.Create_subarray(sizes, subsizes, starts, MPI.ORDER_F)
+sizes = (nz, ny, nx)
+subsizes = (int(nz/pz), int(ny/py), int(nx/px))
+subgrid = np.zeros(subsizes, dtype='f4')
+coords = comm_.Get_coords(rank)
+starts = (subsizes[0] * coords[0], subsizes[1] * coords[1], subsizes[2] * coords[2])
+filetype = MPI.FLOAT.Create_subarray(sizes, subsizes, starts, MPI.ORDER_C)
 filetype.Commit()
 fh.Set_view(filetype=filetype)
 fh.Read_at_all(0, subgrid)
@@ -81,7 +92,7 @@ gcalc.scaling_p(rank, subgrid, subgrid.size)
 print("rank {0} result:\n{1}\n".format(rank, subgrid))
 
 amode = MPI.MODE_WRONLY|MPI.MODE_CREATE
-fh = MPI.File.Open(comm, "./output.grd", amode)
+fh = MPI.File.Open(comm_, "./output.grd", amode)
 
 fh.Set_view(filetype=filetype)
 fh.Write_at_all(0, subgrid)

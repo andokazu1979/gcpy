@@ -7,6 +7,11 @@
 #  gsize: matrix size
 
 np=$1
-gsize=$2
+nx=$2
+ny=$3
+nz=$4
+px=$5
+py=$6
+pz=$7
 
-mpirun -n ${np} python ./main.py ${gsize}
+mpirun -n ${np} python ./main.py ${nx} ${ny} ${nz} ${px} ${py} ${pz}
