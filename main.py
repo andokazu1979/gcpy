@@ -66,6 +66,8 @@ fh.Read_at_all(0, subgrid)
 
 fh.Close()
 
+subgrid = subgrid.byteswap()
+
 print("rank {0} input:\n{1}\n".format(rank, subgrid))
 
 ########################################
@@ -90,6 +92,8 @@ gcalc.scaling_p(rank, subgrid)
     # print("result:\n{1}\n".format(rank, recvbuf))
 
 print("rank {0} result:\n{1}\n".format(rank, subgrid))
+
+subgrid = subgrid.byteswap()
 
 amode = MPI.MODE_WRONLY|MPI.MODE_CREATE
 fh = MPI.File.Open(comm_, sys.argv[8], amode)
