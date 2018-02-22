@@ -72,9 +72,9 @@ print("rank {0} input:\n{1}\n".format(rank, subgrid))
 # Grid calculation
 ########################################
 
-gcalc.scaling_p(rank, subgrid, subgrid.size)
-# gcalc.scaling_c(rank, subgrid, subgrid.size)
-# gcalc.scaling_f(rank, subgrid, subgrid.size)
+gcalc.scaling_p(rank, subgrid)
+# gcalc.scaling_c(rank, subgrid)
+# gcalc.scaling_f(rank, subgrid)
 
 ########################################
 # Gather grid

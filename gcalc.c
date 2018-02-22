@@ -3,14 +3,15 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-extern void scaling(int, float*, int);
+extern void scaling(int, float*, int, int, int);
 #ifdef __cplusplus
 }
 #endif
 
-void scaling(int num, float* arr, int size) {
+void scaling(int num, float* arr, int nx, int ny, int nz) {
     int i;
-    for(i = 0; i < size; i++) {
+    int total = nx * ny * nz;
+    for(i = 0; i < total; i++) {
         arr[i] = arr[i] * num;
     }
 }
