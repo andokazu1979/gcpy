@@ -6,6 +6,9 @@ import sys
 
 import gcalc
 import gcomm
+import gtimer
+
+gtimer.timer_sta(0)
 
 ########################################
 # Initialization for MPI
@@ -102,3 +105,7 @@ fh.Set_view(filetype=filetype)
 fh.Write_at_all(0, subgrid)
 
 fh.Close()
+
+gtimer.timer_end(0)
+
+print("rank{0}: {1}".format(rank, gtimer.get_lst_elapse()))
