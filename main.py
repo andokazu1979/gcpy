@@ -3,10 +3,19 @@
 from mpi4py import MPI
 import numpy as np
 import sys
+import logging
 
 import gcalc
 import gcomm
 import gtimer
+
+level_ = logging.DEBUG
+# level_ = logging.INFO
+# level_ = logging.WARNING
+# level_ = logging.ERROR
+# level_ = logging.CRITCAL
+logging.basicConfig(level = level_)
+logger = logging.getLogger(__name__)
 
 gtimer.timer_sta(0)
 
@@ -17,6 +26,8 @@ gtimer.timer_sta(0)
 comm = MPI.COMM_WORLD
 nproc = comm.Get_size()
 rank = comm.Get_rank()
+
+logger.debug("MPI_COMM_WORLD: nproc {0}, rank {1}".format(nproc, rank))
 
 ########################################
 # Initialize grid
@@ -71,7 +82,7 @@ fh.Close()
 
 subgrid = subgrid.byteswap()
 
-print("rank {0} input:\n{1}\n".format(rank, subgrid))
+logger.debug("rank {0} input:\n{1}\n".format(rank, subgrid))
 
 ########################################
 # Grid calculation
@@ -94,7 +105,7 @@ gcalc.scaling_p(rank, subgrid)
 # if rank == 0:
     # print("result:\n{1}\n".format(rank, recvbuf))
 
-print("rank {0} result:\n{1}\n".format(rank, subgrid))
+logger.debug("rank {0} result:\n{1}\n".format(rank, subgrid))
 
 subgrid = subgrid.byteswap()
 
@@ -108,4 +119,4 @@ fh.Close()
 
 gtimer.timer_end(0)
 
-print("rank{0}: {1}".format(rank, gtimer.get_lst_elapse()))
+logger.info("rank{0}: {1}".format(rank, gtimer.get_lst_elapse()))
