@@ -19,7 +19,7 @@ comm = MPI.COMM_WORLD
 nproc = comm.Get_size()
 rank = comm.Get_rank()
 
-logging.basicConfig(filename='log.{0:06d}'.format(rank), level=level_)
+logging.basicConfig(filename='log.{0:06d}'.format(rank), filemode='w', level=level_)
 logger = logging.getLogger(__name__)
 
 gtimer.timer_sta(0, 'Total')
