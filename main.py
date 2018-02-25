@@ -136,4 +136,5 @@ gtimer.timer_end(4)
 
 gtimer.timer_end(0)
 
-logger.info("rank{0}: {1}".format(rank, gtimer.get_lst_elapse()))
+for item in gtimer.get_lst_elapse():
+    logger.info("rank{0}: {1}".format(rank, item))
