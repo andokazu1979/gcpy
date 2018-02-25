@@ -24,6 +24,8 @@ logger = logging.getLogger(__name__)
 
 gtimer.timer_sta(0, 'Total')
 
+gtimer.timer_sta(1, 'Initialization')
+
 ########################################
 # Initialization for MPI
 ########################################
@@ -46,9 +48,13 @@ comm_ = comm.Create_cart((pz, py, px), reorder=True)
 nproc = comm_.Get_size()
 rank = comm_.Get_rank()
 
+gtimer.timer_end(1)
+
 ########################################
 # Scatter grid
 ########################################
+
+gtimer.timer_sta(2, 'Input')
 
 # sendbuf = None
 # if rank == 0:
@@ -85,17 +91,25 @@ subgrid = subgrid.byteswap()
 
 logger.debug("rank {0} input:\n{1}\n".format(rank, subgrid))
 
+gtimer.timer_end(2)
+
 ########################################
 # Grid calculation
 ########################################
+
+gtimer.timer_sta(3, 'Grid calculation')
 
 gcalc.scaling_p(rank, subgrid)
 # gcalc.scaling_c(rank, subgrid)
 # gcalc.scaling_f(rank, subgrid)
 
+gtimer.timer_end(3)
+
 ########################################
 # Gather grid
 ########################################
+
+gtimer.timer_sta(4, 'Output')
 
 # sendbuf = subgrid
 
@@ -117,6 +131,8 @@ fh.Set_view(filetype=filetype)
 fh.Write_at_all(0, subgrid)
 
 fh.Close()
+
+gtimer.timer_end(4)
 
 gtimer.timer_end(0)
 
