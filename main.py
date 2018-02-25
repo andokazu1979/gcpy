@@ -39,12 +39,14 @@ logger.debug("MPI_COMM_WORLD: nproc {0}, rank {1}".format(nproc, rank))
 nx = int(sys.argv[1])
 ny = int(sys.argv[2])
 nz = int(sys.argv[3])
+nt = int(sys.argv[4])
 
-px = int(sys.argv[4])
-py = int(sys.argv[5])
-pz = int(sys.argv[6])
+px = int(sys.argv[5])
+py = int(sys.argv[6])
+pz = int(sys.argv[7])
+pt = int(sys.argv[8])
 
-comm_ = comm.Create_cart((pz, py, px), reorder=True)
+comm_ = comm.Create_cart((pt, pz, py, px), reorder=True)
 nproc = comm_.Get_size()
 rank = comm_.Get_rank()
 
@@ -73,13 +75,13 @@ gtimer.timer_sta(2, 'Input')
 
 
 amode = MPI.MODE_RDONLY
-fh = MPI.File.Open(comm_, sys.argv[7], amode)
+fh = MPI.File.Open(comm_, sys.argv[9], amode)
 
-sizes = (nz, ny, nx)
-subsizes = (int(nz/pz), int(ny/py), int(nx/px))
+sizes = (nt, nz, ny, nx)
+subsizes = (int(nt/pt), int(nz/pz), int(ny/py), int(nx/px))
 subgrid = np.zeros(subsizes, dtype='f4')
 coords = comm_.Get_coords(rank)
-starts = (subsizes[0] * coords[0], subsizes[1] * coords[1], subsizes[2] * coords[2])
+starts = (subsizes[0] * coords[0], subsizes[1] * coords[1], subsizes[2] * coords[2], subsizes[3] * coords[3])
 filetype = MPI.FLOAT.Create_subarray(sizes, subsizes, starts, MPI.ORDER_C)
 filetype.Commit()
 fh.Set_view(filetype=filetype)
@@ -125,7 +127,7 @@ logger.debug("rank {0} result:\n{1}\n".format(rank, subgrid))
 subgrid = subgrid.byteswap()
 
 amode = MPI.MODE_WRONLY|MPI.MODE_CREATE
-fh = MPI.File.Open(comm_, sys.argv[8], amode)
+fh = MPI.File.Open(comm_, sys.argv[10], amode)
 
 fh.Set_view(filetype=filetype)
 fh.Write_at_all(0, subgrid)

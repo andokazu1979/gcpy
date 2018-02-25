@@ -13,11 +13,13 @@
 nx=$1
 ny=$2
 nz=$3
-px=$4
-py=$5
-pz=$6
-input=$7
-output=$8
-np=$(expr $px \* $py \* $pz)
+nt=$4
+px=$5
+py=$6
+pz=$7
+pt=$8
+input=$9
+output=$10
+np=$(expr $px \* $py \* $pz \* $pt)
 
-mpirun -n ${np} python ./main.py ${nx} ${ny} ${nz} ${px} ${py} ${pz} ${input} ${output}
+mpirun -n ${np} python ./main.py ${nx} ${ny} ${nz} ${nt} ${px} ${py} ${pz} ${pt} ${input} ${output}
