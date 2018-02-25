@@ -22,7 +22,7 @@ rank = comm.Get_rank()
 logging.basicConfig(filename='log.{0:06d}'.format(rank), level=level_)
 logger = logging.getLogger(__name__)
 
-gtimer.timer_sta(0)
+gtimer.timer_sta(0, 'Total')
 
 ########################################
 # Initialization for MPI
