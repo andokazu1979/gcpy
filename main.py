@@ -14,7 +14,12 @@ level_ = logging.DEBUG
 # level_ = logging.WARNING
 # level_ = logging.ERROR
 # level_ = logging.CRITCAL
-logging.basicConfig(level = level_)
+
+comm = MPI.COMM_WORLD
+nproc = comm.Get_size()
+rank = comm.Get_rank()
+
+logging.basicConfig(filename='log.{0:06d}'.format(rank), level=level_)
 logger = logging.getLogger(__name__)
 
 gtimer.timer_sta(0)
@@ -22,10 +27,6 @@ gtimer.timer_sta(0)
 ########################################
 # Initialization for MPI
 ########################################
-
-comm = MPI.COMM_WORLD
-nproc = comm.Get_size()
-rank = comm.Get_rank()
 
 logger.debug("MPI_COMM_WORLD: nproc {0}, rank {1}".format(nproc, rank))
 
