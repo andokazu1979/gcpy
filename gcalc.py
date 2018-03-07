@@ -27,4 +27,4 @@ def scaling_f(num, arr):
     ny = arr.shape[2]
     nz = arr.shape[1]
     nt = arr.shape[0]
-    _libf.scaling_(byref(c_int(num)), arr, byref(c_int(nx)), byref(c_int(ny)), byref(c_int(nz)), byref(c_int(nz)))
+    _libf.scaling_(byref(c_int(num)), arr, byref(c_int(nx)), byref(c_int(ny)), byref(c_int(nz)), byref(c_int(nt)))
