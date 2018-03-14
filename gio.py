@@ -22,11 +22,6 @@ def read_grid(comm, fname, subgrid):
     
     logger.debug("input:\n{0}\n".format(subgrid))
 
-def grid_calc(self):
-    """Grid calculation"""
-
-    pass
-            
 def write_grid(comm, fname, subgrid):
     """Write grid data"""
 
