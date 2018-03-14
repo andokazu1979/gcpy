@@ -13,22 +13,21 @@ level_ = logging.DEBUG
 # level_ = logging.ERROR
 # level_ = logging.CRITCAL
 
+comm = MPI.COMM_WORLD
+nproc = comm.Get_size()
+rank = comm.Get_rank()
+
+logging.basicConfig(filename='log.{0:06d}'.format(rank), filemode='w', level=level_)
+logger = logging.getLogger(__name__)
 
 class Analyzer(object):
 
     def __init__(self):
         """Initialization for MPI"""
 
-        comm = MPI.COMM_WORLD
-        nproc = comm.Get_size()
-        rank = comm.Get_rank()
-        
-        logging.basicConfig(filename='log.{0:06d}'.format(rank), filemode='w', level=level_)
-        self.logger = logging.getLogger(__name__)
-        
         gtimer.timer_sta(1, 'Initialization')
-        
-        self.logger.debug("MPI_COMM_WORLD: nproc {0}, rank {1}".format(nproc, rank))
+
+        logger.debug("MPI_COMM_WORLD: nproc {0}, rank {1}".format(nproc, rank))
 
         self.nx = int(sys.argv[1])
         self.ny = int(sys.argv[2])
@@ -89,5 +88,5 @@ class Analyzer(object):
     def show_timer_result(self):
 
         for item in gtimer.get_lst_elapse():
-            self.logger.info("rank{0}: {1}".format(self.rank, item))
+            logger.info("rank{0}: {1}".format(self.rank, item))
 
