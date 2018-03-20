@@ -53,10 +53,10 @@ def get_filetype(comm, subgrid):
 
     rank = comm.Get_rank()
  
-    subsizes = (int(nt/pt), int(nz/pz), int(ny/py), int(nx/px))
+    wholesizes = (int(nt*pt), int(nz*pz), int(ny*py), int(nx*px))
     coords = comm.Get_coords(rank)
-    starts = (subsizes[0] * coords[0], subsizes[1] * coords[1], subsizes[2] * coords[2], subsizes[3] * coords[3])
-    filetype = MPI.FLOAT.Create_subarray(subgrid.shape, subsizes, starts, MPI.ORDER_C)
+    starts = (subgrid.shape[0] * coords[0], subgrid.shape[1] * coords[1], subgrid.shape[2] * coords[2], subgrid.shape[3] * coords[3])
+    filetype = MPI.FLOAT.Create_subarray(wholesizes, subgrid.shape, starts, MPI.ORDER_C)
     filetype.Commit()
 
     return filetype
