@@ -18,7 +18,9 @@ def read_grid(comm, fname, subgrid):
     
     fh.Close()
     
-    subgrid.byteswap(inplace=True)
+    subgrid_ = subgrid.byteswap()
+    for i, item in enumerate(subgrid_):
+        subgrid[i] = item
     
     logger.debug("input:\n{0}\n".format(subgrid))
 
@@ -27,7 +29,7 @@ def write_grid(comm, fname, subgrid):
 
     logger.debug("result:\n{0}\n".format(subgrid))
     
-    subgrid.byteswap(inplace=True)
+    subgrid = subgrid.byteswap()
     
     amode = MPI.MODE_WRONLY|MPI.MODE_CREATE
     fh = MPI.File.Open(comm, fname, amode)
