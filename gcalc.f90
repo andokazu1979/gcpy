@@ -12,6 +12,7 @@ subroutine scaling(num, arr, nx, ny, nz, nt)
   do j = 1, ny
   do i = 1, nx
      arr(i,j,k,t) = arr(i,j,k,t) * num;
+     write(*,*) arr(i,j,k,t)
   enddo
   enddo
   enddo
