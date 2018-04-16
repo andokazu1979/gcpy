@@ -10,6 +10,8 @@ _libc.scaling.restype = None
 _libc.scaling.argtypes = [c_int, ndpointer(c_float), c_int, c_int, c_int, c_int]
 _libc.subst.restype = None
 _libc.subst.argtypes = [ndpointer(c_float), ndpointer(c_float), c_int]
+_libc.sum.restype = None
+_libc.sum.argtypes = [ndpointer(c_float), c_int, ndpointer(c_float), c_int]
 
 _libf = CDLL(os.path.join(_libdir, "libgcalcf.so"))
 _libf.scaling_.restype = None
@@ -37,3 +39,18 @@ def subst_p(arr1, arr2):
 
 def subst_c(arr1, arr2):
     _libc.subst(arr1, arr2, arr1.size)
+
+def sum_c(arr, dim):
+    arr_tmp = np.zeros(arr.shape).astype(np.float32).sum(dim)
+    lst_trans = _get_trans_shape(arr.ndim, dim)
+    _libc.sum(arr_tmp, arr.shape[dim], arr.transpose(lst_trans).copy(), arr.size)
+    return arr_tmp
+
+def _get_trans_shape(n, dim):
+    lst = []
+    for i in range(n):
+        if i != dim:
+            lst.append(i)
+    lst.append(dim)
+    return lst
+

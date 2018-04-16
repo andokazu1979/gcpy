@@ -5,6 +5,7 @@ extern "C" {
 #endif
 extern void scaling(int, float*, int, int, int, int);
 extern void subst(float*, float*, int);
+extern void sum(float*, int, float*, int);
 #ifdef __cplusplus
 }
 #endif
@@ -21,5 +22,12 @@ void subst(float* arr1, float* arr2, int n) {
     int i;
     for(i = 0; i < n; i++) {
         arr1[i] = arr2[i];
+    }
+}
+
+void sum(float* arr1, int n1, float* arr2, int n2) {
+    int i;
+    for(i = 0; i < n2; i++) {
+        arr1[i / n1] += arr2[i];
     }
 }

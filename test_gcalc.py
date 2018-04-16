@@ -43,3 +43,24 @@ class TestGcalc(object):
         assert  na3[1,0,0,0] == na1[0,0,0,0]
         assert  na3[2,1,1,1] == na1[1,1,1,1]
         assert  na3[3,0,0,0] == pytest.approx(0.0)
+
+    def test_sum_c(self, na1, na2):
+        arr_tmp = gcalc.sum_c(na1, 3)
+        assert  arr_tmp[0,0,0] == pytest.approx(1.0)
+        assert  arr_tmp[0,0,1] == pytest.approx(5.0)
+        assert  arr_tmp[1,1,1] == pytest.approx(29.0)
+
+        arr_tmp = gcalc.sum_c(na1, 2)
+        assert  arr_tmp[0,0,0] == pytest.approx(2.0)
+        assert  arr_tmp[0,0,1] == pytest.approx(4.0)
+        assert  arr_tmp[1,1,1] == pytest.approx(28.0)
+
+        arr_tmp = gcalc.sum_c(na1, 1)
+        assert  arr_tmp[0,0,0] == pytest.approx(4.0)
+        assert  arr_tmp[0,0,1] == pytest.approx(6.0)
+        assert  arr_tmp[1,1,1] == pytest.approx(26.0)
+
+        arr_tmp = gcalc.sum_c(na1, 0)
+        assert  arr_tmp[0,0,0] == pytest.approx(8.0)
+        assert  arr_tmp[0,0,1] == pytest.approx(10.0)
+        assert  arr_tmp[1,1,1] == pytest.approx(22.0)
