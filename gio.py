@@ -40,22 +40,16 @@ def write_grid(comm, fname, subgrid):
     fh.Close()
 
 def get_filetype(comm, subgrid):
-    nx = subgrid.shape[3]
-    ny = subgrid.shape[2] 
-    nz = subgrid.shape[1] 
-    nt = subgrid.shape[0] 
+    n = np.array(subgrid.shape)
 
     shape = comm.Get_topo()[0]
-    px = shape[3]
-    py = shape[2]
-    pz = shape[1]
-    pt = shape[0]
+    p = np.array(shape)
 
     rank = comm.Get_rank()
  
-    wholesizes = (int(nt*pt), int(nz*pz), int(ny*py), int(nx*px))
-    coords = comm.Get_coords(rank)
-    starts = (subgrid.shape[0] * coords[0], subgrid.shape[1] * coords[1], subgrid.shape[2] * coords[2], subgrid.shape[3] * coords[3])
+    wholesizes = n * p[:n.size]
+    coords = np.array(comm.Get_coords(rank))
+    starts = (n * coords[:n.size])
     filetype = MPI.FLOAT.Create_subarray(wholesizes, subgrid.shape, starts, MPI.ORDER_C)
     filetype.Commit()
 
