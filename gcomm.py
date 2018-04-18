@@ -33,3 +33,6 @@ def scatter_c(comm, sendbuf, recvbuf, root):
     else:
         size_ = sendbuf.size
     _libc.scatter(comm_val, sendbuf, size_, recvbuf, recvbuf.size, root)
+
+def reduce_p(comm, sendbuf, recvbuf, op, root):
+    comm.Reduce(sendbuf, recvbuf, op, root)
