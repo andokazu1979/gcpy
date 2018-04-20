@@ -40,17 +40,25 @@ def subst_p(arr1, arr2):
 def subst_c(arr1, arr2):
     _libc.subst(arr1, arr2, arr1.size)
 
-def sum_c(arr, dim):
-    arr_tmp = np.zeros(arr.shape).astype(np.float32).sum(dim)
+def sum_c(arr, dim=None):
+    if dim is None:
+        length = arr.size
+        arr_tmp = np.zeros(1).astype(np.float32)
+    else:
+        length = arr.shape[dim]
+        arr_tmp = np.zeros(arr.shape).astype(np.float32).sum(dim)
     lst_trans = _get_trans_shape(arr.ndim, dim)
-    _libc.sum(arr_tmp, arr.shape[dim], arr.transpose(lst_trans).copy(), arr.size)
+    _libc.sum(arr_tmp, length, arr.transpose(lst_trans).copy(), arr.size)
     return arr_tmp
 
 def _get_trans_shape(n, dim):
-    lst = []
-    for i in range(n):
-        if i != dim:
-            lst.append(i)
-    lst.append(dim)
+    if dim is None:
+        lst = range(n)
+    else:
+        lst = []
+        for i in range(n):
+            if i != dim:
+                lst.append(i)
+        lst.append(dim)
     return lst
 
