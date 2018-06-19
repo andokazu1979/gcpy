@@ -14,8 +14,6 @@ elif len(args) >= 3:
     raise Exception("Too many configuration files is specified!")
 parser.parse(sys.argv[1])
 conf = parser.dict_root
-calc_pattern = conf['global']['calc_pattern']
-exec_cond = conf[calc_pattern]['exec_cond']
 loglevel = conf['global']['loglevel']
 
 if loglevel == 'DEBUG':
@@ -31,10 +29,8 @@ elif loglevel == 'CRITCAL':
 
 logging.basicConfig(level = level_)
 logger = logging.getLogger(__name__)
-logger.info(calc_pattern)
 
 logger.debug(conf)
-logger.debug(exec_cond.values)
 cmd = ['mpirun', '-n', str(conf['global']['num_procs']), 'python', conf['global']['exec_name'], sys.argv[1]]
 logger.debug(cmd)
 subprocess.check_output(cmd)
