@@ -60,11 +60,11 @@ def read_grid(input_, subgrid):
 
     gio.read_grid(comm, input_, subgrid)
 
-def grid_calc1(subgrid):
+def grid_calc_scaling(subgrid):
 
     return gcalc.scaling_p(rank, subgrid)
 
-def grid_calc2(subgrid):
+def grid_calc_sum(subgrid, axis_reduce):
 
     return gcalc.sum_c(subgrid, axis_reduce)
 
