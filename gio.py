@@ -7,7 +7,7 @@ from mpi4py import MPI
 
 logger = logging.getLogger(__name__)
 
-def read_grid(comm, fname, subgrid):
+def read_grid(comm, fname, subgrid, is_little=False):
     """Read grid data"""
 
     amode = MPI.MODE_RDONLY
@@ -18,18 +18,22 @@ def read_grid(comm, fname, subgrid):
     
     fh.Close()
     
-    subgrid_ = subgrid.byteswap()
+    if is_little == True:
+        subgrid_ = subgrid
+    else:
+        subgrid_ = subgrid.byteswap()
     for i, item in enumerate(subgrid_):
         subgrid[i] = item
     
     logger.debug("input:\n{0}\n".format(subgrid))
 
-def write_grid(comm, fname, subgrid):
+def write_grid(comm, fname, subgrid, is_little=False):
     """Write grid data"""
 
     logger.debug("result:\n{0}\n".format(subgrid))
     
-    subgrid = subgrid.byteswap()
+    if is_little == False:
+        subgrid = subgrid.byteswap()
     
     amode = MPI.MODE_WRONLY|MPI.MODE_CREATE
     fh = MPI.File.Open(comm, fname, amode)

@@ -31,6 +31,16 @@ logging.basicConfig(level = level_)
 logger = logging.getLogger(__name__)
 
 logger.debug(conf)
-cmd = ['mpirun', '-n', str(conf['global']['num_procs']), 'python', conf['global']['exec_name'], sys.argv[1]]
-logger.debug(cmd)
-subprocess.check_output(cmd)
+try:
+    cmd = ['mpirun', '-n', str(conf['global']['num_procs']), 'python', conf['global']['exec_name'], sys.argv[1]]
+    logger.debug(cmd)
+    ret = subprocess.check_output(cmd)
+    logger.debug(ret)
+except subprocess.CalledProcessError as e:
+    print("*** Error occured in processing command! ***")
+    print("Return code: {0}".format(e.returncode))
+    print("Command: {0}".format(e.cmd))
+    print("Output: {0}".format(e.output))
+    raise e
+
+

@@ -34,15 +34,15 @@ def init(conf):
     global comm, nproc, rank
     global subgrid, axis_reduce
 
-    nx = exec_cond['nx']
-    ny = exec_cond['ny'] 
-    nz = exec_cond['nz'] 
-    nt = exec_cond['nt'] 
+    nx = int(exec_cond['nx'])
+    ny = int(exec_cond['ny'])
+    nz = int(exec_cond['nz'])
+    nt = int(exec_cond['nt'])
     
-    px = exec_cond['px'] 
-    py = exec_cond['py'] 
-    pz = exec_cond['pz'] 
-    pt = exec_cond['pt'] 
+    px = int(exec_cond['px'])
+    py = int(exec_cond['py'])
+    pz = int(exec_cond['pz'])
+    pt = int(exec_cond['pt'])
      
     logger.debug("px: {0}, py: {1}, pz: {2}, pt: {3}".format(px, py, pz, pt))
 
@@ -56,9 +56,9 @@ def init(conf):
 
     return subgrid
 
-def read_grid(input_, subgrid):
+def read_grid(input_, subgrid, is_little=False):
 
-    gio.read_grid(comm, input_, subgrid)
+    gio.read_grid(comm, input_, subgrid, is_little)
 
 def grid_calc_scaling(subgrid):
 
@@ -68,10 +68,15 @@ def grid_calc_sum(subgrid, axis_reduce):
 
     return gcalc.sum_c(subgrid, axis_reduce)
 
+def grid_calc_mean(grid, axis_reduce):
+
+    # return gcalc.sum_c(grid, axis_reduce) / grid.shape[axis_reduce]
+    return gcalc.sum_p(grid, axis_reduce) / grid.shape[axis_reduce]
+
 def write_grid1(subgrid, output):
     gio.write_grid(comm, output, subgrid)
 
-def write_grid2(subgrid, output):
+def write_grid2(subgrid, output, axis_reduce=None, is_little=False):
 
     shape = comm.Get_topo()[0]
 
@@ -81,7 +86,8 @@ def write_grid2(subgrid, output):
             recvbuf = np.zeros(subgrid.shape, dtype='f4')
         gcomm.reduce_p(comm, subgrid, recvbuf, MPI.SUM, 0)
         if rank == 0:
-            recvbuf = recvbuf.byteswap()
+            if is_little == False:
+                recvbuf = recvbuf.byteswap()
             recvbuf.tofile(output) # Output serially with one process
     else: # Reduction with one axis
         comm_io = comm.Sub([int(i != axis_reduce) for i in range(4)])
@@ -95,6 +101,6 @@ def write_grid2(subgrid, output):
             gcomm.reduce_p(comm_reduce, subgrid, recvbuf, MPI.SUM, 0) # Reduction through domains in axis for reduction
 
             if comm_reduce.Get_rank() == 0:
-                gio.write_grid(comm_io, output, recvbuf) # Output parallelly with processes of residual domain after reduction
+                gio.write_grid(comm_io, output, recvbuf, is_little) # Output parallelly with processes of residual domain after reduction
         else: # Number of domain in axis for reduction is one.
-            gio.write_grid(comm_io, output, subgrid) # Output parallelly with processes of residual domain after reduction
+            gio.write_grid(comm_io, output, subgrid, is_little) # Output parallelly with processes of residual domain after reduction

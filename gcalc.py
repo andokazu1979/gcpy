@@ -40,6 +40,9 @@ def subst_p(arr1, arr2):
 def subst_c(arr1, arr2):
     _libc.subst(arr1, arr2, arr1.size)
 
+def sum_p(arr, dim=None):
+    return arr.sum(axis=dim)
+
 def sum_c(arr, dim=None):
     if dim is None:
         length = arr.size
