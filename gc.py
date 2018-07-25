@@ -73,8 +73,12 @@ def grid_calc_mean(grid, axis_reduce):
     # return gcalc.sum_c(grid, axis_reduce) / grid.shape[axis_reduce]
     return gcalc.sum_p(grid, axis_reduce) / grid.shape[axis_reduce]
 
-def write_grid1(subgrid, output):
-    gio.write_grid(comm, output, subgrid)
+def grid_calc_concat(grid, axis_reduce=None):
+
+    return gcalc.sum_p(grid, axis_reduce) / grid.shape[axis_reduce]
+
+def write_grid1(subgrid, output, is_little=False):
+    gio.write_grid(comm, output, subgrid, is_little)
 
 def write_grid2(subgrid, output, axis_reduce=None, is_little=False):
 
