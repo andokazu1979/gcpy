@@ -123,7 +123,7 @@ if __name__ == '__main__':
     obj = TOMLParser()
     obj.parse(sys.argv[1])
     for item in obj.dict_root:
-        print "[{0}]".format(item)
+        print("[{0}]".format(item))
         for item2 in obj.dict_root[item]:
-            print "{0} : {1}".format(item2, obj.dict_root[item][item2])
-        print ""
+            print("{0} : {1}".format(item2, obj.dict_root[item][item2]))
+        print("")
