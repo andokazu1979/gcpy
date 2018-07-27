@@ -56,6 +56,11 @@ def init(conf):
 
     return subgrid
 
+def get_grid(nx, ny, nz, nt):
+    subsizes = (int(nt/pt), int(nz/pz), int(ny/py), int(nx/px))
+    subgrid = np.zeros(subsizes, dtype='f4')
+    return subgrid
+
 def read_grid(input_, subgrid, is_little=False):
 
     gio.read_grid(comm, input_, subgrid, is_little)
