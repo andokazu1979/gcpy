@@ -24,15 +24,15 @@ logger = logging.getLogger(__name__)
 
 def init(conf):
 
-    logger.debug("MPI_COMM_WORLD: nproc {0}, rank {1}".format(nproc, rank))
-
-    calc_pattern = conf['global']['calc_pattern']
-    exec_cond = conf[calc_pattern]['exec_cond']
-
     global nx, ny, nz, nt 
     global px, py, pz, pt 
     global comm, nproc, rank
     global subgrid, axis_reduce
+
+    logger.debug("MPI_COMM_WORLD: nproc {0}, rank {1}".format(nproc, rank))
+
+    calc_pattern = conf['global']['calc_pattern']
+    exec_cond = conf[calc_pattern]['exec_cond']
 
     nx = int(exec_cond['nx'])
     ny = int(exec_cond['ny'])
